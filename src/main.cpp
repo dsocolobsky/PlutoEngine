@@ -7,10 +7,10 @@ using namespace video;
 using namespace io;
 using namespace gui;
 
+
 // Neccessary to load the .dll
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
 int main()
@@ -36,6 +36,7 @@ int main()
         case 'f': driverType = video::EDT_NULL;     break;
         default: return 1;
 	}
+	std::cin.get();
 	
 	// Create device
 	IrrlichtDevice *device = createDevice(driverType, dimension2d<u32>(640,480));
@@ -74,30 +75,32 @@ int main()
 	int lastFPS = -1; // Last FPS to keep track of current FPS
 
 	//Main Loop
-	while(device->run())
+	while(device->run()) // While the Device is running
 	{
-		if(device->isWindowActive())
+		if(device->isWindowActive()) // If the Window is active
 		{
 			// We begin the scene
 			driver->beginScene(true,true,video::SColor(255,200,200,200));
 			smgr->drawAll(); // We draw all from the Scene Manager
 			driver->endScene(); // We end the scene
 
-			int fps = driver->getFPS();
-			if(lastFPS != fps)
+			int fps = driver->getFPS(); // We get the current FPS
+			if(lastFPS != fps) // If the FPS has changed
 			{
+				// I set a string to tell me the FPS in the Title Window
 				core::stringw str = L"FPS: [";
 				str += fps;
 				str += "]";
 
-				device->setWindowCaption(str.c_str());
-				lastFPS = fps;
+				device->setWindowCaption(str.c_str()); // We set the Title
+				lastFPS = fps; // We update lastFPS to the current FPS
 			}
-		} else
+		} else // If the Window is not active 
 		{
-			device->yield();
+			device->yield(); // We pause execution
 		}
-		device->drop();
-		return 0;
+		
 	}
+	device->drop(); // When the game loop ends, close the device
+	return 0; // And finish the program
 }
